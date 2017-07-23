@@ -4,12 +4,17 @@ MAINTAINER ddt-tdd <dtillemans@gmail.com>
 RUN yum -y update 
 RUN yum -y install java-1.8.0-openjdk-devel.x86_64 wget ant unzip
 RUN useradd -pwildfly wildfly
-RUN cd opt && wget http://download.jboss.org/wildfly/10.1.0.Final/wildfly-10.1.0.Final.tar.gz && tar -xvzf wildfly-10.1.0.Final.tar.gz && chown -R wildfly:wildfly wildfly-10.1.0.Final && rm -f wildfly-10.1.0.Final.tar.gz
+RUN cd opt && \
+    wget http://download.jboss.org/wildfly/10.1.0.Final/wildfly-10.1.0.Final.tar.gz && \
+    tar -xvzf wildfly-10.1.0.Final.tar.gz && \
+    chown -R wildfly:wildfly wildfly-10.1.0.Final && \
+    rm -f wildfly-10.1.0.Final.tar.gz && \
+    cd /opt/wildfly-10.1.0.Final/standalone/deployments/ && \
+    wget https://downloads.mariadb.com/Connectors/java/connector-java-2.0.3/mariadb-java-client-2.0.3.jar && \
+    mv mariadb-java-client-2.0.3.jar mariadb-java-client.jar
 
 ADD mariadb.repo /etc/yum.repos.d/
 RUN yum -y install MariaDB-server MariaDB-client
-ADD mariadb.repo /etc/yum.repos.d/
-ADD mariadb-java-client-2.0.3.jar /opt/wildfly-10.1.0.Final/standalone/deployments/mariadb-java-client.jar
 
 # Configuration files
 ADD docker-entry.sh /
